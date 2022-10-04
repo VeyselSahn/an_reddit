@@ -22,13 +22,22 @@ class MainBloc extends Bloc<MainEvent, MainState> {
     var postList = response['data']['children'];
     if (response != null && postList != null) {
       // model listesini oluşturuyoruz
-      List<PostModel> newPosts = [];
-      for (var i = 0; i < postList.length; i++) {
-        newPosts.add(PostModel.fromJson(postList[i]['data']));
-      }
+
+      var newPosts = (postList as List)
+          .map((e) => PostModel.fromJson(e['data']))
+          .cast<PostModel>()
+          .toList();
 
       // model yapmak yerine böyle kullanabiliriz
       var afterPost = response['data']['before'];
+
+      // api before , after parametrelerinde bir sıkıntı oldu
+      //? düzeltme yapmak için
+      state.posts.every((element) {
+        newPosts.contains(element) ? null : newPosts.add(element);
+        return true;
+      });
+
       return emit(state.copyWith(posts: newPosts, afterPost: afterPost));
     }
   }

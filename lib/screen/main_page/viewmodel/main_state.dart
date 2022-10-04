@@ -9,6 +9,8 @@ class MainState extends Equatable {
     List<PostModel>? posts,
     String? afterPost,
   }) {
+    // yeni postları listenin üstüne ekliyoruz
+
     return MainState(
       posts: posts ?? this.posts,
       afterPost: afterPost ?? this.afterPost,
